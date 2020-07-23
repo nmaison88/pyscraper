@@ -54,8 +54,8 @@ while len(unscraped):
         if not link.endswith(".gz"):
           if not link in unscraped and not link in scraped:
               unscraped.append(link)
-
-df = pd.DataFrame(emails, columns=["Email"])
+d = {'Sites': scraped, 'Emails': emails}
+df = pd.DataFrame(data = d)
 df.to_csv('email.csv', index=False)
 print(df)
 
