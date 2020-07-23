@@ -13,7 +13,8 @@ import datetime
 
 def checkCsv(csvName):
   try:
-    with open(csvName, newline='') as csvfile:
+    csvNamelocation = 'PlaceCsvHere/'+csvName
+    with open(csvNamelocation, newline='') as csvfile:
       reader = csv.reader(csvfile, delimiter=',', quotechar="'")
       original_urls = []
       for row in reader:
@@ -119,7 +120,8 @@ def scrape(original_url, csvName = "email.csv"):
   d =  emails
   print(d)
   df = pd.DataFrame(data = d)
-  df.to_csv(csvName, index=False)
+  resultLocation = 'Results/'+csvName
+  df.to_csv(resultLocation, index=False)
   print(df)
 
 start();
