@@ -7,7 +7,7 @@ Pyscraper is a Python tool for webscraping and gathering Email Addresses.
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Pyscrapers dependencies.
 
 ```bash
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Usage
