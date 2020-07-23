@@ -20,7 +20,8 @@ def checkCsv(csvName):
           original_urls.append(row[0])
           # print(row[0])
       print('detected Urls From Csv:\n')
-      scrape(original_urls)
+      new_csv_to_create = "scraped_"+ csvName
+      scrape(original_urls,new_csv_to_create )
   except:
     print('CSV doesnt exist in directory, either mispelled or not in directory\n')
     time.sleep(1)
@@ -64,16 +65,14 @@ def start():
     start()
 
 
-def scrape(original_url):
+def scrape(original_url, csvName = "email.csv"):
   print('scrape Hit')
   print(type(original_url))
 
   if(isinstance(original_url, (list))):
-    print('is list')
     unscraped = deque(original_url)
     print(unscraped)  
   else:
-    print('isnt list')
     unscraped = deque([original_url])  
 
 
@@ -117,7 +116,7 @@ def scrape(original_url):
   d =  emails
   print(d)
   df = pd.DataFrame(data = d)
-  df.to_csv('email.csv', index=False)
+  df.to_csv(csvName, index=False)
   print(df)
 
 start();
