@@ -8,6 +8,8 @@ import pandas as pd
 import csv
 import time
 import datetime
+from os import listdir
+from os.path import isfile, join
 
 
 
@@ -26,6 +28,9 @@ def checkCsv(csvName):
       scrape(original_urls,new_csv_to_create )
   except:
     print('CSV doesnt exist in directory, either mispelled or not in directory\n')
+    print('Files Found in Folder that were detected:\n')
+    onlyfiles = [f for f in listdir('PlaceCsvHere') if isfile(join('PlaceCsvHere', f))]
+    print(str(onlyfiles).strip('[]'))
     time.sleep(1)
     print('.')
     time.sleep(1)
@@ -70,8 +75,6 @@ def start():
 
 
 def scrape(original_url, csvName = "email.csv"):
-  print('scrape Hit')
-  print(type(original_url))
 
   if(isinstance(original_url, (list))):
     unscraped = deque(original_url)
@@ -118,10 +121,9 @@ def scrape(original_url, csvName = "email.csv"):
             if not link in unscraped and not link in scraped:
                 unscraped.append(link)
   d =  emails
-  print(d)
   df = pd.DataFrame(data = d)
   resultLocation = 'Results/'+csvName
   df.to_csv(resultLocation, index=False)
-  print(df)
+  print('Completed Scraping, New Csv File is added to Results Folder, Thank you!')
 
 start();
