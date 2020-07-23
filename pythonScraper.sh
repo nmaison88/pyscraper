@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import csv
 import time
+import datetime
 
 
 
@@ -39,7 +40,9 @@ def checkCsv(csvName):
 def pasteMode():
   print('Paste Mode:\n')
   original_url = input("Enter the website url: ") 
-  scrape(original_url)
+  today = datetime.datetime.now().strftime("%c")
+
+  scrape(original_url,str(today)+'.csv')
 
 def csvMode():
   print('Csv Mode:')
