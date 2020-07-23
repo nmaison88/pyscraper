@@ -5,6 +5,28 @@ from urllib.parse import urlsplit
 from collections import deque
 from bs4 import BeautifulSoup
 import pandas as pd
+import csv
+import time
+
+
+
+def checkCsv(csvName):
+  try:
+    with open(csvName, newline='') as csvfile:
+      reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+      for row in reader:
+        print(', '.join(row))
+  except:
+    print('CSV doesnt exist in directory, either mispelled or not in directory\n')
+    time.sleep(1)
+    print('.')
+    time.sleep(1)
+    print('..')
+    time.sleep(1)
+    print('...')
+    print('Please double Check File name and try again\n')
+
+    csvMode();
 
 
 
@@ -65,8 +87,10 @@ def pasteMode():
 
 def csvMode():
   print('Csv Mode:')
-  csvFile = input('enter the name of the Csv, make sure its in the same folder as this program\n')
-  print('you entered: \n'+ str(csvFile))
+  csvName = input('enter the name of the Csv, make sure its in the same folder as this program\n')
+  print('you entered: \n'+ str(csvName))
+  checkCsv(csvName);
+
 def start():
   choice = int(input("Enter the Mode: \n 1 for paste Mode \n 2 for Csv Mode \n 9 to quit program \n"))
 
