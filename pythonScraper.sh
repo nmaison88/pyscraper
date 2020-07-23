@@ -13,9 +13,14 @@ import time
 def checkCsv(csvName):
   try:
     with open(csvName, newline='') as csvfile:
-      reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+      reader = csv.reader(csvfile, delimiter=',', quotechar="'")
+      original_urls = []
       for row in reader:
-        print(', '.join(row))
+        if row[0] != 'Sites':
+          original_urls.append(row[0])
+          # print(row[0])
+      print('detected Urls From Csv:\n')
+      scrape(original_urls)
   except:
     print('CSV doesnt exist in directory, either mispelled or not in directory\n')
     time.sleep(1)
@@ -33,57 +38,7 @@ def checkCsv(csvName):
 def pasteMode():
   print('Paste Mode:\n')
   original_url = input("Enter the website url: ") 
-
-  unscraped = deque([original_url])  
-
-  scraped = set()  
-
-  emails = set()  
-
-  while len(unscraped):
-      url = unscraped.popleft()  
-      scraped.add(url)
-
-      parts = urlsplit(url)
-          
-      base_url = "{0.scheme}://{0.netloc}".format(parts)
-      if '/' in parts.path:
-        path = url[:url.rfind('/')+1]
-      else:
-        path = url
-
-      print("Crawling URL %s" % url)
-      try:
-          response = requests.get(url)
-      except (requests.exceptions.MissingSchema, requests.exceptions.ConnectionError):
-          continue
-
-      new_emails = set(re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.com", response.text, re.I))
-      emails.update(new_emails) 
-
-      soup = BeautifulSoup(response.text,  "html.parser")
-
-
-
-      for anchor in soup.find_all("a"):
-        if "href" in anchor.attrs:
-          link = anchor.attrs["href"]
-        else:
-          link = ''
-
-          if link.startswith('/'):
-              link = base_url + link
-          
-          elif not link.startswith('http'):
-              link = path + link
-
-          if not link.endswith(".gz"):
-            if not link in unscraped and not link in scraped:
-                unscraped.append(link)
-  d = {'Sites': scraped, 'Emails': emails}
-  df = pd.DataFrame(data = d)
-  df.to_csv('email.csv', index=False)
-  print(df)
+  scrape(original_url)
 
 def csvMode():
   print('Csv Mode:')
@@ -107,5 +62,62 @@ def start():
   elif choice != 1 and choice != 2 and choice != 'exit':
     print('    Choice entered ' + str(choice) + ' Invalid')
     start()
+
+
+def scrape(original_url):
+  print('scrape Hit')
+  print(type(original_url))
+
+  if(isinstance(original_url, (list))):
+    print('is list')
+    unscraped = deque(original_url)
+    print(unscraped)  
+  else:
+    print('isnt list')
+    unscraped = deque([original_url])  
+
+
+  scraped = set()  
+  emails = []  
+  while len(unscraped):
+      url = unscraped.popleft()  
+      scraped.add(url)
+      parts = urlsplit(url)
+      base_url = "{0.scheme}://{0.netloc}".format(parts)
+      if '/' in parts.path:
+        path = url[:url.rfind('/')+1]
+      else:
+        path = url
+      print("Crawling URL %s" % url)
+      try:
+          response = requests.get(url)
+      except (requests.exceptions.MissingSchema, requests.exceptions.ConnectionError):
+        continue
+      new_emails = set(re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.com", response.text, re.I))
+      if new_emails:
+        emails.append({"Sites": url,"emails":str(list(new_emails)).strip('[]')})
+      else:
+        emails.append({"Sites": url,"emails":" "})
+      soup = BeautifulSoup(response.text,  "html.parser")
+
+      for anchor in soup.find_all("a"):
+        if "href" in anchor.attrs:
+          link = anchor.attrs["href"]
+        else:
+          link = ''
+          if link.startswith('/'):
+              link = base_url + link
+
+          elif not link.startswith('http'):
+              link = path + link
+
+          if not link.endswith(".gz"):
+            if not link in unscraped and not link in scraped:
+                unscraped.append(link)
+  d =  emails
+  print(d)
+  df = pd.DataFrame(data = d)
+  df.to_csv('email.csv', index=False)
+  print(df)
 
 start();
