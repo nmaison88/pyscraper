@@ -18,13 +18,15 @@ doubleclick the shell script, your terminal should open,
 ask whether you want to use with CSV mode, or Email Paste mode.
  
 Enter :
-1 for paste Mode
-2 for Csv Mode 
+1 for paste Mode, Paste the Website url Include http://
+2 for Csv Mode, make sure the Csv is in the folder labeled PlaceCsvHere
 If paste mode 
-Once Completed there will be a new Csv with the emails that have been scraped.
+Once Completed there will be a new Csv with the emails within the Results folder that have been scraped the name of the file will be the date and time the program was ran.
 
 Otherwise if csv mode
-the specified Csv will be edited with the emails added csv format must be 
+the specified Csv will be scraped and a new Csv with the emails added will be generated within the Results folder
+
+csv format must be 
 
 Website,Emails
 Website,Emails
